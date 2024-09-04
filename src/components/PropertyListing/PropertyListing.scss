@@ -1,3 +1,15 @@
+.Error {
+    display: flex;
+    justify-content: center;
+}
+
+.Loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
 .PropertyListing {
     li { 
         list-style-type: none;

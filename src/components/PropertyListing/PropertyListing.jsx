@@ -1,29 +1,23 @@
 import React from 'react';
 import PropertyCard from '../PropertyCard';
 import './PropertyListing.scss';
-
-const DUMMY_PROPERTY = {
-    id: 73864112,
-    bedrooms: 3,
-    summary: 'Property 1 Situated moments from the River Thames in Old Chelsea...',
-    displayAddress: '1 CHEYNE WALK, CHELSEA, SW3',
-    propertyType: 'Flat',
-    price: 1950000,
-    branchName: 'M2 Property, London',
-    propertyUrl: '/property-for-sale/property-73864112.html',
-    contactUrl: '/property-for-sale/contactBranch.html?propertyId=73864112',
-    propertyTitle: '3 bedroom flat for sale',
-    mainImage:
-        'https://media.rightmove.co.uk/dir/crop/10:9-16:9/38k/37655/53588679/37655_CAM170036_IMG_01_0000_max_476x317.jpg',
-};
+import useSWR from 'swr';
+import { API_URL } from '../../constants';
+import { fetcher } from '../../utils/fetchHelpers';
 
 const PropertyListing = () => {
+    // Could create custom hook with useEffect to fetch on render without library
+    // But handling loading, error, and data is a bit more complex + no caching or revalidation :(
+    const { data: properties, isLoading, error } = useSWR(API_URL, fetcher);
+
+    if (error) return <div className="Error">Sorry, there was an issue loading properties, please try again</div>;
+    if (isLoading) return <div className="Loading">Loading...</div>
+
     return (
         <ul className="PropertyListing">
-            {Array(5)
-                .fill(DUMMY_PROPERTY)
-                .map((property, index) => (
-                    <li key={index}>
+            {properties
+                .map((property) => (
+                    <li key={property.id}>
                         <PropertyCard {...property} />
                     </li>
                 ))}
